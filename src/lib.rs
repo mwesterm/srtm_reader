@@ -78,7 +78,7 @@ impl Tile {
     }
     fn get_offset(&self, coord: (f64, f64)) -> (usize, usize) {
         let origin = self.get_origin(coord);
-        eprintln!("origin: ({}, {})", origin.0, origin.1);
+        // eprintln!("origin: ({}, {})", origin.0, origin.1);
         let extent = self.resolution.extent() as f64;
 
         let row = ((origin.0 - coord.0) * extent) as usize;
@@ -88,7 +88,7 @@ impl Tile {
 
     pub fn get(&self, coord: (f64, f64)) -> i16 {
         let offset = self.get_offset(coord);
-        eprintln!("offset: ({}, {})", offset.1, offset.0);
+        // eprintln!("offset: ({}, {})", offset.1, offset.0);
         self.get_at_offset(offset.1 as u32, offset.0 as u32)
     }
 
@@ -136,7 +136,16 @@ fn get_lat_long<P: AsRef<Path>>(path: P) -> Result<(i32, i32), Error> {
     let lng: i32 = desc[4..7].parse().map_err(|_| Error::ParseLatLong)?;
     Ok((lat_sign * lat, lng_sign * lng))
 }
-
+pub fn get_filename(coord: (f64, f64)) -> String {
+    let lat_ch = if coord.0 >= 0. { 'N' } else { 'S' };
+    let lon_ch = if coord.1 >= 0. { 'E' } else { 'W' };
+    let lat = coord.0.trunc() as u16;
+    let lon = coord.1.trunc() as u16;
+    format!(
+        "{lat_ch}{lat}{lon_ch}{}{lon}.hgt",
+        if lon < 100 { "0" } else { "" }
+    )
+}
 fn parse<R: Read>(reader: R, res: Resolution) -> io::Result<Vec<i16>> {
     let mut reader = reader;
     let mut data = Vec::new();
