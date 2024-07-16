@@ -1,9 +1,6 @@
-use std::fs;
-use std::fs::File;
-
 use byteorder::{BigEndian, ReadBytesExt};
-use std::io;
-use std::io::{BufReader, Read};
+use std::fs::{self, File};
+use std::io::{self, BufReader, Read};
 use std::path::Path;
 
 const EXTENT: usize = 3600;
