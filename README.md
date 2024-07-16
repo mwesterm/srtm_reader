@@ -8,6 +8,8 @@ Reads elevation data from `.hgt` files in Rust.
 -   1 angle second (SRTM1)
 -   3 angle second (SRTM3)
 
+-   _feel free to open an issue if you need more_
+
 ## Example
 
 ```rust
@@ -23,8 +25,12 @@ let tile = srtm::Tile::from_file(filename).unwrap();
 let elevation = tile.get(coord);
 ```
 
-also, see [cli example](./examples/cli.rs)
+also, see [cli example](./examples/cli.rs) for a real-life one
 
 ## _NOTE_
 
-a great source of srtm, `.hgt` files is [sonny's collection](https://sonny.4lima.de/)
+a great source of srtm, `.hgt` files is [Sonny's collection](https://sonny.4lima.de/)
+
+## Dependents
+
+-   [fit2gpx-rs](https://github.com/JeromeSchmied/fit2gpx-rs)
