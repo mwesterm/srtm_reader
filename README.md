@@ -23,6 +23,8 @@ let tile = srtm::Tile::from_file(filename).unwrap();
 let elevation = tile.get(coord);
 ```
 
+also, see [cli example](./examples/cli.rs)
+
 ## _NOTE_
 
 a great source of srtm, `.hgt` files is [sonny's collection](https://sonny.4lima.de/)
