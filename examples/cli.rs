@@ -11,6 +11,11 @@ impl From<Coord> for (f64, f64) {
         (coord.lat, coord.lon)
     }
 }
+impl From<Coord> for srtm::Coord {
+    fn from(val: Coord) -> Self {
+        srtm::Coord::new(val.lat, val.lon)
+    }
+}
 impl std::fmt::Display for Coord {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "({}, {})", self.lat, self.lon)?;
@@ -27,21 +32,21 @@ impl Coord {
         let mut coord = str.split(',');
         let lat: f64 = coord
             .next()
-            .unwrap_or_else(|| quit_help(Some("coord parsing")))
+            .unwrap_or_else(|| quit_help("coord parsing"))
             .parse()
-            .unwrap_or_else(|_| quit_help(Some("coord parsing")));
+            .unwrap_or_else(|_| quit_help("coord parsing"));
         let lon: f64 = coord
             .next()
-            .unwrap_or_else(|| quit_help(Some("coord parsing")))
+            .unwrap_or_else(|| quit_help("coord parsing"))
             .parse()
-            .unwrap_or_else(|_| quit_help(Some("coord parsing")));
+            .unwrap_or_else(|_| quit_help("coord parsing"));
 
         Self::new(lat, lon)
     }
 }
 
 /// quit, showing help
-fn quit_help(cx: Option<&str>) -> ! {
+fn quit_help(cx: &str) -> ! {
     eprintln!(
         "error: {}
 
@@ -53,7 +58,7 @@ ARGS:  <LATITUDE_FLOAT,LONGITUDE_FLOAT>
 
 OPTIONS:
        --elev_data_dir: <ELEVATION_DATA_DIR> or $elev_data_dir set",
-        cx.unwrap_or("unknown")
+        if cx.is_empty() { "unknown" } else { cx }
     );
     std::process::exit(1);
 }
@@ -72,22 +77,22 @@ fn main() -> io::Result<()> {
     // eprintln!("coord: ({};{})", coord.0, coord.1);
     let elev_data_dir = if let Some(arg_data_dir) = get_arg(&args, "--elev_data_dir") {
         arg_data_dir
-    } else if let Some(env_data_dir) = option_env!("elev_data_dir") {
+    } else if let Some(env_data_dir) = option_env!("ELEV_DATA_DIR") {
         env_data_dir.into()
     } else {
-        quit_help(Some("no elev_data_dir got"));
+        quit_help("no elev_data_dir got");
     };
     let elev_data_dir = PathBuf::from(elev_data_dir);
     // eprintln!("is tiff: {is_tiff}");
     // eprintln!("elev_data_dir: {}", elev_data_dir.display());
-    let file_name = srtm::get_filename(coord.into());
+    let file_name = srtm::get_filename(coord);
     // eprintln!("file_name: {file_path}");
     let file_path = elev_data_dir.join(file_name);
     // eprintln!("path to .hgt file: {}", file_path.display());
 
     let data = srtm::Tile::from_file(file_path).unwrap();
     // eprintln!("resolution: {:?}", data.resolution);
-    let elevation = data.get(coord.into());
+    let elevation = data.get(coord);
 
     // eprintln!("offset: row: {row}, col: {col}");
     // let elevation = coord.get_elevation(&data);
