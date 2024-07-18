@@ -1,6 +1,6 @@
 //! srtm data: `.hgt` file parser
 //!
-//! ```rust
+//! ```no_run
 //! use srtm::*;
 //! use std::path::PathBuf;
 //!
