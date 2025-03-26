@@ -34,9 +34,13 @@ impl Coord {
     }
 
     /// truncate both latitude and longitude
+    /// use no_std compatible `to_int_unchecked` method
     pub fn trunc(&self) -> (i8, i16) {
-        (self.lat.trunc() as i8, self.lon.trunc() as i16)
+        let lat_trunc = unsafe { self.lat.to_int_unchecked::<i8>() };
+        let lon_trunc = unsafe { self.lon.to_int_unchecked::<i16>() };
+        (lat_trunc, lon_trunc)
     }
+
     /// get the name of the file, which shall include this `coord`s elevation
     ///
     /// # Usage

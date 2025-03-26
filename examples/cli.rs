@@ -83,7 +83,7 @@ fn main() -> io::Result<()> {
     let file_path = elev_data_dir.join(file_name);
     // eprintln!("path to .hgt file: {}", file_path.display());
 
-    let data = srtm_reader::Tile::from_file(file_path).unwrap();
+    let data: srtm_reader::Tile = srtm_reader::Tile::from_file(file_path).unwrap();
     // eprintln!("resolution: {:?}", data.resolution);
     if args.contains(&"--max".to_string()) {
         println!("max elevation in this file is {}", data.max_height());

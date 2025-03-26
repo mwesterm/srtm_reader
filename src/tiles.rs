@@ -1,5 +1,6 @@
 use super::{Coord, Error};
 use crate::resolutions::Resolution;
+
 use std::{
     fs::File,
     io::{self, Read},
@@ -117,6 +118,7 @@ impl Tile {
         Ok((lat_sign * lat, lon_sign * lon))
     }
 }
+
 // impl for non-pub fn-s
 impl Tile {
     /// index `self` as if it was a matrix

@@ -1,3 +1,4 @@
+#![cfg_attr(feature = "no_std", no_std)]
 //! A performant [srtm](https://www.earthdata.nasa.gov/sensors/srtm) reader for `.hgt` files.
 //!
 //! # Usage
@@ -39,4 +40,10 @@ pub enum Error {
     ParseLatLong,
     Filesize,
     Read,
+}
+
+pub trait HgtReader {
+    fn open_hgt_data<FILE>(&self, file_name: &str) -> Result<FILE, Error>;
+    fn read_hgt_data<FILE>(&self, file: FILE, res: Resolution) -> Result<Vec<i16>, Error>;
+    fn close_hgt_data<FILE>(&self, file: FILE) -> Result<(), Error>;
 }
